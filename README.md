@@ -9,15 +9,44 @@
 
 ---
 
-## 1. Problem and Who It Helps
+## Challenge Alignment: "AI for Better Living & Smarter Communities"
 
-Families, elderly people, homemakers, working individuals, and students living on tight monthly budgets struggle to plan their food spending because vegetable prices fluctuate violently and unpredictably from week to week. A spike in onions or tomatoes can strain a weekly household budget overnight.
+- **Better Everyday Living**: Ordinary families, homemakers, and students face volatile kitchen expenses when staple vegetable prices jump unpredictably. The app transforms raw market fluctuations into a clear, actionable decision: **Buy now / Wait / Buy a little**, protecting household budgets.
+- **Inclusive Communities**: Built with an inclusive Telugu-first interface, native voice playback (**"వినండి"**), high-contrast badges, and large touch targets ($\ge 56\text{px}$) designed for elderly citizens, non-English speakers, and first-time smartphone users.
+- **Smarter Communities**: Replaces guesswork with transparent local intelligence, combining seasonal statistical machine learning (Holt-Winters) with retrieved agricultural economics research (RAG) and honest backtest accuracy disclosures.
 
-### Who It Helps:
-- **Homemakers & Families**: Decide whether to buy a week's supply of staple vegetables today or wait for prices to drop.
-- **Elderly People & Seniors**: Simple interface, large accessible buttons (>= 56px), large readable text (>= 18px), high-contrast badges, and native Telugu voice output ("వినండి").
-- **Students & Working Youth**: Quickly check price directions when budgeting groceries.
-- **Small Shopkeepers & Street Vendors**: Observe medium-term weekly trends and historical patterns without navigating complex mandi spreadsheets.
+---
+
+## How AI is Used
+
+| AI Component | Role in Application | Implementation Details |
+| :--- | :--- | :--- |
+| **Statistical ML Forecasting** | Forecasts next week's price and 4-week prediction intervals | Pure TypeScript Holt-Winters Additive model (52-week seasonality) with in-sample grid search and 12-week rolling backtest |
+| **RAG Knowledge Retrieval** | Grounds explanations in verified agricultural facts | TF-IDF vectorizer + Cosine Similarity indexing 10 curated markdown notes with contextual seasonal/direction boosting |
+| **Natural Language Synthesis** | Explains reasoning in conversational Telugu or English | Deterministic template fallback + optional Google Gemini REST API integration (temperature 0.2, 8s timeout) |
+
+---
+
+## Who It Helps
+
+1. 👩‍🍳 **Homemakers (గృహిణులు)**: Weekly budget planning (*వారపు బడ్జెట్ ప్లాన్ చేసుకోవడానికి*).
+2. 👴 **Elderly people (వృద్ధులు)**: One clear answer with voice (*ఒకే స్పష్టమైన సమాధానం, వినే సౌకర్యం*).
+3. 🎓 **Students (విద్యార్థులు)**: Shopping on a small budget (*తక్కువ బడ్జెట్లో కొనుగోలు*).
+4. 👨‍👩‍👧 **Working families (ఉద్యోగ కుటుంబాలు)**: Quick grocery decisions (*త్వరగా నిర్ణయం తీసుకోవడానికి*).
+5. 🏪 **Small vendors (చిన్న వ్యాపారులు)**: See price trends without complex spreadsheets (*ధరల ధోరణి తెలుసుకోవడానికి*).
+
+---
+
+## Try It in 30 Seconds
+
+1. **Tap "🍅 ఉదాహరణ చూడండి (Try an example)"**: Instantly loads Tomato's forecast, showing how low-confidence volatility triggers a protective downgrade to **"కొద్దిగా మాత్రమే కొనండి (Buy a little)"**.
+2. **Switch Language**: Tap the **"English / తెలుగు"** toggle in the header to switch languages on the fly.
+3. **Tap "🔊 వినండి (Listen)"**: Hear the recommendation read aloud in natural speech.
+4. **Open "ఈ అంచనా గురించి (About this prediction)"**: Review the honest 12-week backtest MAPE compared against the Naive persistence baseline.
+
+---
+
+## 1. Problem Statement
 
 ---
 

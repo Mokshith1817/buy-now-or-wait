@@ -1,36 +1,22 @@
+/**
+ * @file rag.ts
+ * @description Retrieval-Augmented Generation engine using TF-IDF vectorization, cosine similarity, and agricultural seasonal boosting.
+ */
+
 import fs from "fs";
 import path from "path";
+import { NoteDoc, RetrievedReason, RagContext, PriceDirection } from "./types";
 
-export interface NoteDoc {
-  id: string;
-  title: string;
-  items: string[] | "all";
-  tags: string[];
-  source: string;
-  source_url: string;
-  verified: boolean;
-  content: string;
-}
-
-export interface RetrievedReason {
-  title: string;
-  source: string;
-  source_url: string;
-  verified: boolean;
-  score?: number;
-}
-
-export interface RagContext {
-  item: string;
-  direction: "up" | "down" | "stable";
-  month?: number; // 0-11 (0=Jan, 9=Oct, etc.)
-  extraQuery?: string;
-}
+export type { NoteDoc, RetrievedReason, RagContext, PriceDirection };
 
 let cachedNotes: NoteDoc[] | null = null;
 
 /**
- * Parse front matter from markdown file
+ * Parses front matter and body content from a markdown note file.
+ *
+ * @param raw Raw markdown file content string.
+ * @param filename File basename for fallback identifier.
+ * @returns Parsed NoteDoc structure.
  */
 export function parseNoteContent(raw: string, filename: string): NoteDoc {
   const parts = raw.split(/^---$/m);
@@ -50,7 +36,6 @@ export function parseNoteContent(raw: string, filename: string): NoteDoc {
   let source_url = "general market observation";
   let verified = false;
 
-  let currentKey = "";
   let parsingListKey: "items" | "tags" | null = null;
   const parsedItemsList: string[] = [];
   const parsedTagsList: string[] = [];
@@ -69,7 +54,7 @@ export function parseNoteContent(raw: string, filename: string): NoteDoc {
     const colonIdx = trimmed.indexOf(":");
     if (colonIdx > 0) {
       const key = trimmed.slice(0, colonIdx).trim().toLowerCase();
-      let val = trimmed.slice(colonIdx + 1).trim();
+      const val = trimmed.slice(colonIdx + 1).trim();
 
       parsingListKey = null;
 
@@ -123,7 +108,9 @@ export function parseNoteContent(raw: string, filename: string): NoteDoc {
 }
 
 /**
- * Load all markdown notes from docs/notes/
+ * Loads all curated agricultural markdown notes from docs/notes/.
+ *
+ * @returns Array of parsed NoteDoc objects.
  */
 export function loadAllNotes(): NoteDoc[] {
   if (cachedNotes) return cachedNotes;
@@ -147,7 +134,7 @@ export function loadAllNotes(): NoteDoc[] {
 }
 
 /**
- * Tokenize string into lowercase alphanumeric words
+ * Tokenizes text into lowercase alphanumeric keywords.
  */
 function tokenize(text: string): string[] {
   return text
@@ -158,7 +145,12 @@ function tokenize(text: string): string[] {
 }
 
 /**
- * Compute TF-IDF vectors for documents and query, with contextual boosts
+ * Retrieves top K relevant agricultural knowledge notes based on TF-IDF cosine similarity
+ * and contextual domain boosting (item match, price direction, rainy season).
+ *
+ * @param context Query context with item, price direction, and calendar month.
+ * @param topK Maximum number of notes to return (default: 3).
+ * @returns Array of top K RetrievedReason objects sorted descending by relevance score.
  */
 export function retrieveRelevantNotes(
   context: RagContext,
@@ -167,7 +159,6 @@ export function retrieveRelevantNotes(
   const notes = loadAllNotes();
   if (notes.length === 0) return [];
 
-  // Build vocabulary
   const docTokens: string[][] = notes.map((doc) => {
     const itemStr = Array.isArray(doc.items) ? doc.items.join(" ") : doc.items;
     const combined = `${doc.title} ${doc.tags.join(" ")} ${itemStr} ${doc.content}`;
@@ -184,13 +175,11 @@ export function retrieveRelevantNotes(
     }
   }
 
-  // Precompute IDF
   const idf = new Map<string, number>();
   for (const [token, count] of df.entries()) {
     idf.set(token, Math.log((1 + N) / (1 + count)) + 1.0);
   }
 
-  // Compute doc vectors
   const docVectors: Map<string, number>[] = docTokens.map((tokens) => {
     const tf = new Map<string, number>();
     for (const t of tokens) {
@@ -210,7 +199,6 @@ export function retrieveRelevantNotes(
     return vec;
   });
 
-  // Build query
   const queryWords = [
     context.item,
     context.direction === "up" ? "rise increase high" : "",
@@ -235,13 +223,10 @@ export function retrieveRelevantNotes(
     queryVec.set(t, weight / qNorm);
   }
 
-  // Current month (0-11): June=5, July=6, Aug=7, Sept=8, Oct=9
   const month = context.month ?? new Date().getUTCMonth();
-  const isRainySeason = month >= 5 && month <= 9; // Jun-Oct
+  const isRainySeason = month >= 5 && month <= 9; // June to October monsoon
 
-  // Compute scores
   const scored = notes.map((note, idx) => {
-    // 1. Base Cosine Similarity
     const docVec = docVectors[idx];
     let cosineSim = 0;
     for (const [t, qWeight] of queryVec.entries()) {
@@ -251,16 +236,16 @@ export function retrieveRelevantNotes(
 
     let score = cosineSim;
 
-    // 2. Item boost
+    // Item-specific boost
     if (Array.isArray(note.items)) {
       if (note.items.includes(context.item.toLowerCase())) {
-        score += 0.45; // specific item match
+        score += 0.45;
       }
     } else if (note.items === "all") {
-      score += 0.15; // general all-items note
+      score += 0.15;
     }
 
-    // 3. Direction tag boost
+    // Direction-specific tag boost
     if (context.direction === "up") {
       if (note.tags.includes("arrivals")) score += 0.15;
       if (note.tags.includes("season")) score += 0.15;
@@ -270,12 +255,11 @@ export function retrieveRelevantNotes(
       if (note.tags.includes("season")) score += 0.15;
     }
 
-    // 4. Rainy season boost (Jun-Oct -> rain tag)
+    // Monsoon season boost
     if (isRainySeason && note.tags.includes("rain")) {
       score += 0.35;
     }
 
-    // If query explicitly mentions rain, boost rain tag regardless of month
     if (queryTokens.includes("rain") && note.tags.includes("rain")) {
       score += 0.4;
     }
@@ -289,8 +273,6 @@ export function retrieveRelevantNotes(
     };
   });
 
-  // Sort descending by score
   scored.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-
   return scored.slice(0, topK);
 }

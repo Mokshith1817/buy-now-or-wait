@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { TRANSLATIONS, ITEMS, TranslationKey } from "@/lib/i18n";
+import { TRANSLATIONS, ITEMS, TARGET_PERSONAS, TranslationKey } from "@/lib/i18n";
 
 describe("i18n Language Integrity", () => {
   it("every key exists in both te and en (no missing strings)", () => {
@@ -58,6 +58,51 @@ describe("i18n Language Integrity", () => {
       expect(found?.name_en.toLowerCase()).toBe(exp.name_en.toLowerCase());
       expect(found?.name_te).toBe(exp.name_te);
       expect(found?.emoji).toBeTruthy();
+    }
+  });
+
+  it("contains all 5 target audience personas with exact bilingual strings", () => {
+    expect(TARGET_PERSONAS.length).toBe(5);
+
+    const expectedPersonas = [
+      {
+        id: "homemakers",
+        title_en: "Homemakers",
+        title_te: "గృహిణులు",
+        benefit_te: "వారపు బడ్జెట్ ప్లాన్ చేసుకోవడానికి",
+      },
+      {
+        id: "elderly",
+        title_en: "Elderly people",
+        title_te: "వృద్ధులు",
+        benefit_te: "ఒకే స్పష్టమైన సమాధానం, వినే సౌకర్యం",
+      },
+      {
+        id: "students",
+        title_en: "Students",
+        title_te: "విద్యార్థులు",
+        benefit_te: "తక్కువ బడ్జెట్లో కొనుగోలు",
+      },
+      {
+        id: "working_families",
+        title_en: "Working families",
+        title_te: "ఉద్యోగ కుటుంబాలు",
+        benefit_te: "త్వరగా నిర్ణయం తీసుకోవడానికి",
+      },
+      {
+        id: "vendors",
+        title_en: "Small vendors",
+        title_te: "చిన్న వ్యాపారులు",
+        benefit_te: "ధరల ధోరణి తెలుసుకోవడానికి",
+      },
+    ];
+
+    for (const exp of expectedPersonas) {
+      const found = TARGET_PERSONAS.find((p) => p.id === exp.id);
+      expect(found).toBeDefined();
+      expect(found?.title_en).toBe(exp.title_en);
+      expect(found?.title_te).toBe(exp.title_te);
+      expect(found?.benefit_te).toBe(exp.benefit_te);
     }
   });
 });

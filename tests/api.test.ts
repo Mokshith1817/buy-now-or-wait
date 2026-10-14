@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import { POST } from "@/app/api/advice/route";
 import { GET as getForecast } from "@/app/api/forecast/route";
 import { GET as getHealth } from "@/app/api/health/route";

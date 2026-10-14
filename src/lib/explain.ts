@@ -1,23 +1,24 @@
-import { ConfidenceLevel } from "./forecast";
-import { RetrievedReason } from "./rag";
-import { Language, ITEMS } from "./i18n";
+/**
+ * @file explain.ts
+ * @description Natural language explanation generator combining deterministic bilingual templates with optional Gemini REST API integration.
+ */
 
-export interface ExplanationInput {
-  item: string;
-  change7: number;
-  confidence: ConfidenceLevel;
-  lang: Language;
-  reasons: RetrievedReason[];
-  downgraded?: boolean;
-}
+import {
+  MAX_LLM_OUTPUT_CHARS,
+  LLM_REQUEST_TIMEOUT_MS,
+  DEFAULT_GEMINI_MODEL,
+} from "./constants";
+import { ExplanationInput, ExplanationResult } from "./types";
+import { ITEMS } from "./i18n";
 
-export interface ExplanationResult {
-  text: string;
-  usedLLM: boolean;
-}
+export type { ExplanationInput, ExplanationResult };
 
 /**
- * Deterministic template fallback (ALWAYS available)
+ * Builds a deterministic bilingual template explanation using forecast change, confidence, and primary reason.
+ * Always available offline and guaranteed never to fail.
+ *
+ * @param input Explanation parameters including item, change7, confidence, language, and retrieved reasons.
+ * @returns Formatted natural language string in the requested language.
  */
 export function buildTemplateExplanation(input: ExplanationInput): string {
   const itemObj = ITEMS.find((i) => i.id === input.item);
@@ -76,22 +77,24 @@ export function buildTemplateExplanation(input: ExplanationInput): string {
 }
 
 /**
- * Validate LLM generated text:
- * - non-empty
- * - under 500 characters
- * - no markdown symbols (*, #, `, _, ~, [, ])
+ * Validates candidate LLM output against safety, length, and format constraints.
+ *
+ * @param text Candidate generated text string.
+ * @returns True if text is valid plain text under character limit without markdown.
  */
 function isValidLLMOutput(text: string): boolean {
   if (!text || text.trim().length === 0) return false;
-  if (text.length >= 500) return false;
-  // Markdown symbols check
+  if (text.length >= MAX_LLM_OUTPUT_CHARS) return false;
   if (/[\*#`_~\[\]]/.test(text)) return false;
   return true;
 }
 
 /**
- * Generate explanation: Calls Gemini REST API if GEMINI_API_KEY is present,
- * otherwise safely returns deterministic template fallback.
+ * Generates natural language advice explanation. Calls Google Gemini REST API if GEMINI_API_KEY is present,
+ * with strict 8-second timeout and validation. Silently falls back to template on any error.
+ *
+ * @param input Explanation parameters including item, change7, confidence, language, and reasons.
+ * @returns Promise resolving to ExplanationResult with explanation text and usedLLM flag.
  */
 export async function generateExplanation(
   input: ExplanationInput
@@ -103,7 +106,7 @@ export async function generateExplanation(
     return { text: fallbackText, usedLLM: false };
   }
 
-  const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
+  const model = process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
     model
   )}:generateContent`;
@@ -134,7 +137,7 @@ Instructions:
 
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000); // 8-second timeout
+    const timer = setTimeout(() => controller.abort(), LLM_REQUEST_TIMEOUT_MS);
 
     const res = await fetch(url, {
       method: "POST",
@@ -172,7 +175,6 @@ Instructions:
 
     return { text: fallbackText, usedLLM: false };
   } catch {
-    // Silently fallback on any network error, timeout, or parsing error
     return { text: fallbackText, usedLLM: false };
   }
 }

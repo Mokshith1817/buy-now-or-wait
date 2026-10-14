@@ -671,3 +671,106 @@ summary:focus-visible {
   white-space: nowrap;
   border: 0;
 }
+
+/* Who is this for? Community Persona Cards */
+.who-section {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.who-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.who-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.who-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.who-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 580px) {
+  .who-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 760px) {
+  .who-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.who-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: transform 0.1s ease;
+}
+
+.who-card:hover {
+  border-color: var(--brand-primary);
+}
+
+.who-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.who-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.who-card-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.who-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.who-card-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.who-card-benefit {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--brand-primary);
+  line-height: 1.4;
+}

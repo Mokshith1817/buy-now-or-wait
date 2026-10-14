@@ -1,13 +1,15 @@
-export type Language = "te" | "en";
+/**
+ * @file i18n.ts
+ * @description Bilingual localization dictionaries (Telugu & English), commodity metadata, and audience persona definitions.
+ */
 
-export interface ItemDefinition {
-  id: string;
-  name_en: string;
-  name_te: string;
-  emoji: string;
-  keywords: string[]; // for speech recognition matching
-}
+import { Language, ItemDefinition, TargetPersona } from "./types";
 
+export type { Language, ItemDefinition, TargetPersona };
+
+/**
+ * Metadata definition for 8 tracked essential vegetable commodities.
+ */
 export const ITEMS: ItemDefinition[] = [
   {
     id: "tomato",
@@ -67,8 +69,59 @@ export const ITEMS: ItemDefinition[] = [
   },
 ];
 
-export const VALID_ITEM_IDS = new Set(ITEMS.map((item) => item.id));
+/** Allowlist of supported item identifiers for fast validation. */
+export const VALID_ITEM_IDS = new Set<string>(ITEMS.map((item) => item.id));
 
+/**
+ * 5 Audience Persona definitions for the "Who is this for?" section.
+ * Aligns directly with the problem statement and community impact goals.
+ */
+export const TARGET_PERSONAS: TargetPersona[] = [
+  {
+    id: "homemakers",
+    emoji: "👩‍🍳",
+    title_en: "Homemakers",
+    title_te: "గృహిణులు",
+    benefit_en: "Weekly budget planning",
+    benefit_te: "వారపు బడ్జెట్ ప్లాన్ చేసుకోవడానికి",
+  },
+  {
+    id: "elderly",
+    emoji: "👴",
+    title_en: "Elderly people",
+    title_te: "వృద్ధులు",
+    benefit_en: "One clear answer with voice",
+    benefit_te: "ఒకే స్పష్టమైన సమాధానం, వినే సౌకర్యం",
+  },
+  {
+    id: "students",
+    emoji: "🎓",
+    title_en: "Students",
+    title_te: "విద్యార్థులు",
+    benefit_en: "Shopping on a small budget",
+    benefit_te: "తక్కువ బడ్జెట్లో కొనుగోలు",
+  },
+  {
+    id: "working_families",
+    emoji: "👨‍👩‍👧",
+    title_en: "Working families",
+    title_te: "ఉద్యోగ కుటుంబాలు",
+    benefit_en: "Quick decisions",
+    benefit_te: "త్వరగా నిర్ణయం తీసుకోవడానికి",
+  },
+  {
+    id: "vendors",
+    emoji: "🏪",
+    title_en: "Small vendors",
+    title_te: "చిన్న వ్యాపారులు",
+    benefit_en: "See price trends",
+    benefit_te: "ధరల ధోరణి తెలుసుకోవడానికి",
+  },
+];
+
+/**
+ * Complete bilingual translations for UI copy.
+ */
 export const TRANSLATIONS = {
   te: {
     appName: "కొనాలా? ఆగాలా?",
@@ -112,6 +165,8 @@ export const TRANSLATIONS = {
     priceTrendStable: "ధర స్థిరంగా ఉండవచ్చు",
     lowConfidenceNotice: "నమ్మకం తక్కువగా ఉన్నందున కొద్దిగా మాత్రమే కొనడం శ్రేయస్కరం.",
     loading: "అంచనా వేస్తోంది...",
+    whoIsThisFor: "ఇది ఎవరికి ఉపయోగం?",
+    whoIsThisForSubtitle: "రోజువారీ ఖర్చులను నియంత్రించుకోవడానికి ప్రతి కుటుంబానికి సహాయకారి",
   },
   en: {
     appName: "Buy Now or Wait",
@@ -155,6 +210,8 @@ export const TRANSLATIONS = {
     priceTrendStable: "Price may stay stable",
     lowConfidenceNotice: "Confidence is low, so buying a little is safer.",
     loading: "Forecasting...",
+    whoIsThisFor: "Who is this for?",
+    whoIsThisForSubtitle: "Practical price intelligence helping everyday households plan better",
   },
 } as const;
 
