@@ -1,0 +1,2 @@
+synthetic
+Synthetic sample weekly vegetable prices generated for demo purposes.
