@@ -147,3 +147,13 @@ A template file `.env.example` has been created with documentation. No live API 
 3. **Select Onion**: Click **"🧅 ఉల్లిపాయ (Onion)"** to view a High-confidence **"ఇప్పుడే కొనండి (Buy now)"** verdict (+23.8%) supported by Nashik rainfall research notes.
 4. **Listen to Advice**: Click **"🔊 వినండి (Listen)"** to hear the spoken audio verdict in Telugu, or tap the **"English"** toggle in the header to switch languages instantly.
 5. **Inspect Methodology**: Click **"ఈ అంచనా గురించి (About this prediction)"** to review the honest 12-week Holt-Winters backtest MAPE vs the naive persistence baseline.
+
+---
+
+## 8. Deployment & Live Links
+
+- **Author**: [Venkata Siva Sai Mokshith Puvvada](https://www.linkedin.com/in/venkata-siva-sai-mokshith-puvvada-9001b130a)
+- **Live Demo Link**: [https://lnkd.in/d5VgKz3D](https://lnkd.in/d5VgKz3D)
+- **GitHub Repository**: [https://lnkd.in/dZyeVMmy](https://lnkd.in/dZyeVMmy)
+- **LinkedIn Showcase Post**: [https://lnkd.in/p/dxiFZqtt](https://lnkd.in/p/dxiFZqtt)
+- **Event**: PromptWars 2026, hosted by Creative Community VVITU with Google for Developers & Hack2Skill.

@@ -1,6 +1,7 @@
 # Buy Now or Wait (కొనాలా? ఆగాలా?)
 
-> **Simple, transparent vegetable price forecasting and buying guidance for ordinary Indian families.**
+> **Simple, transparent vegetable price forecasting and buying guidance for ordinary Indian families.**  
+> *Built at **PromptWars 2026**, hosted by Creative Community VVITU with Google for Developers and Hack2Skill.*
 
 [![Vitest Tests](https://img.shields.io/badge/tests-31%20passed-brightgreen.svg)]()
 [![Next.js 15](https://img.shields.io/badge/Next.js-15%20App%20Router-black.svg)]()
@@ -233,7 +234,9 @@ The app is engineered to run out of the box on Vercel with zero external service
    *(If neither variable is set, the app runs completely using its built-in deterministic bilingual template generator).*
 7. Click **Deploy**.
 
-**Live Demo Link**: `<add after deploy>`
+**Live Demo Link**: [https://lnkd.in/d5VgKz3D](https://lnkd.in/d5VgKz3D)  
+**GitHub Repository**: [https://lnkd.in/dZyeVMmy](https://lnkd.in/dZyeVMmy)  
+**LinkedIn Post**: [PromptWars 2026 Showcase](https://lnkd.in/p/dxiFZqtt)
 
 ---
 
@@ -243,3 +246,13 @@ The app is engineered to run out of the box on Vercel with zero external service
 2. **Additional Crops**: Expanding beyond the initial 8 vegetables to include leafy greens (spinach, coriander), pulses, and cooking oils.
 3. **Additional Regional Languages**: Adding Hindi, Tamil, Kannada, and Marathi translations and voice models.
 4. **Exogenous Shock Modeling**: Incorporating live weather radar / rainfall indices and diesel transport prices directly into the forecast equations.
+
+---
+
+## 11. Author & Credits
+
+- **Author**: [Venkata Siva Sai Mokshith Puvvada](https://www.linkedin.com/in/venkata-siva-sai-mokshith-puvvada-9001b130a)
+- **Live Demo**: [https://lnkd.in/d5VgKz3D](https://lnkd.in/d5VgKz3D)
+- **GitHub Repository**: [https://lnkd.in/dZyeVMmy](https://lnkd.in/dZyeVMmy)
+- **LinkedIn Announcement**: [PromptWars 2026 Showcase Post](https://lnkd.in/p/dxiFZqtt)
+- **Hackathon**: PromptWars 2026, hosted by **Creative Community VVITU** in partnership with **Google for Developers** and **Hack2Skill**.
